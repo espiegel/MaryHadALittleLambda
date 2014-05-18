@@ -50,11 +50,17 @@ public class Main extends Application {
         fox.setScaleY(.5);
         root.getChildren().add(fox);*/
 
-        Mary mary = new Mary(new Location(0, 3));
-        populateCells(root, mary);
-        root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+        Lion lion = new Lion(new Location(7, 5));
+        root.getChildren().add(lion);
 
+        Mary mary = new Mary(new Location(0, 3));
+        root.getChildren().add(mary);
+
+        John john = new John(new Location(9, 0));
+        root.getChildren().add(john);
+
+        addKeyHandler(scene, mary);
+        populateCells(root);
         primaryStage.show();
     }
 
@@ -66,7 +72,7 @@ public class Main extends Application {
 
     }
 
-    private void populateCells(Group root, final Mary mary) {
+    private void populateCells(Group root) {
         // Gratuitous use of lambdas to do nested iteration!
         Group cells = new Group();
 
@@ -76,9 +82,6 @@ public class Main extends Application {
                 rect.setFill(Color.rgb(0, 0, 0, 0));
                 rect.setStrokeType(StrokeType.INSIDE);
                 rect.setStroke(Color.BLACK);
-                final int x = i;
-                final int y = j;
-                rect.setOnMousePressed(event -> mary.moveTo(new Location(x, y)));
                 cells.getChildren().add(rect);
             }
         }
@@ -88,23 +91,34 @@ public class Main extends Application {
 
     private void addKeyHandler(Scene scene, Shepherd mary) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+            final int x = mary.getLocation().getX();
+            final int y = mary.getLocation().getY();
+
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
                 case W:
                 case UP:
-                    mary.move(Direction.UP);
+                    if(isLegalMove(x, y-1)) {
+                        mary.move(Direction.UP);
+                    }
                     break;
                 case A:
                 case LEFT:
-                    mary.move(Direction.LEFT);
+                    if(isLegalMove(x-1, y)) {
+                        mary.move(Direction.LEFT);
+                    }
                     break;
                 case S:
                 case DOWN:
-                    mary.move(Direction.DOWN);
+                    if(isLegalMove(x, y+1)) {
+                        mary.move(Direction.DOWN);
+                    }
                     break;
                 case D:
                 case RIGHT:
-                    mary.move(Direction.RIGHT);
+                    if(isLegalMove(x+1, y)) {
+                        mary.move(Direction.RIGHT);
+                    }
                     break;
                 case ESCAPE:
                     Platform.exit();
@@ -112,6 +126,9 @@ public class Main extends Application {
         });
     }
 
+    private boolean isLegalMove(int x, int y) {
+        return x >= 0 && y >= 0 && x < HORIZONTAL_CELLS && y < VERTICAL_CELLS;
+    }
     public static void main(String[] args) {
         launch(args);
     }
