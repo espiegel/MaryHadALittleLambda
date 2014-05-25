@@ -26,6 +26,14 @@ public class Lion extends NumberedSpriteView {
                     }
                 }
             }
+
+            if(getMoveQueue() > 0) {
+                Direction dir = calculateMoveDirection();
+                if(dir != null) {
+                    move(dir);
+                }
+                reduceMoveQueue();
+            }
         };
     }
 
@@ -90,8 +98,8 @@ public class Lion extends NumberedSpriteView {
             Direction dir = calculateMoveDirection();
             if(dir != null) {
                 move(dir);
+                moveQueue += num - 1;
             }
-            moveQueue += num - 1;
         } else {
             moveQueue += num;
         }

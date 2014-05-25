@@ -34,6 +34,13 @@ public class Lamb extends NumberedSpriteView {
         super(LAMB, following);
         direction.addListener(directionListener);
         directionListener.changed(direction, direction.getValue(), direction.getValue());
+
+        final Lamb lamb = this;
+        arrivalHandler = event -> {
+            if(getLocation().equals(Main.getmLion().getLocation())) {
+                Main.getmLion().eatLamb(lamb);
+            }
+        };
     }
 
     public Shepherd getShepherd() {

@@ -94,13 +94,16 @@ public class SpriteView extends StackPane {
                 arrivalHandler.handle(e);
             }
 
-            if(this instanceof Lion) {
+            /*if(this instanceof Lion) {
                 Lion lion = (Lion)this;
                 if(lion.getMoveQueue() > 0) {
-                    lion.move(lion.calculateMoveDirection());
+                    Direction dir = lion.calculateMoveDirection();
+                    if(dir != null) {
+                        lion.move(dir);
+                    }
                     lion.reduceMoveQueue();
                 }
-            }
+            }*/
         });
         Application.invokeLater(walking::play);
 

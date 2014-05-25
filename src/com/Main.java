@@ -175,4 +175,12 @@ public class Main extends Application {
     public static List<Shepherd> getmShepherdList() {
         return mShepherdList;
     }
+
+    public static Lion getmLion() {
+        return mLion;
+    }
+
+    public static int getmMoves() {
+        return mMoves;
+    }
 }
