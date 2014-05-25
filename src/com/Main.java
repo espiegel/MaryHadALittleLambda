@@ -13,6 +13,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main extends Application {
 
     public static final int SCALE = 4;
@@ -23,6 +26,10 @@ public class Main extends Application {
     public static final int BOARD_WIDTH = HORIZONTAL_CELLS * CELL_SIZE;
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
+
+    private static int mMoves = 0;
+    private static List<Shepherd> mShepherdList = new ArrayList<>();
+    private static Lion mLion;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -50,8 +57,8 @@ public class Main extends Application {
         fox.setScaleY(.5);
         root.getChildren().add(fox);*/
 
-        Lion lion = new Lion(new Location(7, 5));
-        root.getChildren().add(lion);
+        mLion = new Lion(new Location(7, 5));
+        root.getChildren().add(mLion);
 
         Mary mary = new Mary(new Location(0, 3));
         root.getChildren().add(mary);
@@ -59,7 +66,10 @@ public class Main extends Application {
         John john = new John(new Location(9, 0));
         root.getChildren().add(john);
 
-        addKeyHandler(scene, mary);
+        mShepherdList.add(mary);
+        mShepherdList.add(john);
+
+        addKeyHandler(scene, mary, john);
         populateCells(root);
         primaryStage.show();
     }
@@ -89,35 +99,54 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd mary, Shepherd john) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
-            final int x = mary.getLocation().getX();
-            final int y = mary.getLocation().getY();
+            final int xMary = mary.getLocation().getX();
+            final int yMary = mary.getLocation().getY();
+
+            final int xJohn = john.getLocation().getX();
+            final int yJohn = john.getLocation().getY();
 
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
                 case W:
+                    if(isLegalMove(xJohn, yJohn-1)) {
+                        move(john, Direction.UP);
+                    }
+                    break;
                 case UP:
-                    if(isLegalMove(x, y-1)) {
-                        mary.move(Direction.UP);
+                    if(isLegalMove(xMary, yMary-1)) {
+                        move(mary, Direction.UP);
                     }
                     break;
                 case A:
+                    if(isLegalMove(xJohn-1, yJohn)) {
+                        move(john, Direction.LEFT);
+                    }
+                    break;
                 case LEFT:
-                    if(isLegalMove(x-1, y)) {
-                        mary.move(Direction.LEFT);
+                    if(isLegalMove(xMary-1, yMary)) {
+                        move(mary, Direction.LEFT);
                     }
                     break;
                 case S:
+                    if(isLegalMove(xJohn, yJohn+1)) {
+                        move(john, Direction.DOWN);
+                    }
+                    break;
                 case DOWN:
-                    if(isLegalMove(x, y+1)) {
-                        mary.move(Direction.DOWN);
+                    if(isLegalMove(xMary, yMary+1)) {
+                        move(mary, Direction.DOWN);
                     }
                     break;
                 case D:
+                    if(isLegalMove(xJohn+1, yJohn)) {
+                        move(john, Direction.RIGHT);
+                    }
+                    break;
                 case RIGHT:
-                    if(isLegalMove(x+1, y)) {
-                        mary.move(Direction.RIGHT);
+                    if(isLegalMove(xMary+1, yMary)) {
+                        move(mary, Direction.RIGHT);
                     }
                     break;
                 case ESCAPE:
@@ -126,10 +155,24 @@ public class Main extends Application {
         });
     }
 
+    private void move(Shepherd shepherd, Direction direction) {
+        shepherd.move(direction);
+        mMoves++;
+
+        if(mMoves % 2 == 0) {
+            mLion.moveLion(2);
+        }
+    }
+
     private boolean isLegalMove(int x, int y) {
         return x >= 0 && y >= 0 && x < HORIZONTAL_CELLS && y < VERTICAL_CELLS;
     }
+
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static List<Shepherd> getmShepherdList() {
+        return mShepherdList;
     }
 }

@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 public class Lamb extends NumberedSpriteView {
     // Image by Mack: http://www.rpgmakervx.net/index.php?showtopic=15704
     static final Image LAMB = loadImage("../images/lamb.png");
+    private Shepherd shepherd;
+
     private ChangeListener<Direction> directionListener = (ov, o, o2) -> {
         switch (o2) {
             case RIGHT:
@@ -32,5 +34,13 @@ public class Lamb extends NumberedSpriteView {
         super(LAMB, following);
         direction.addListener(directionListener);
         directionListener.changed(direction, direction.getValue(), direction.getValue());
+    }
+
+    public Shepherd getShepherd() {
+        return shepherd;
+    }
+
+    public void setShepherd(Shepherd shepherd) {
+        this.shepherd = shepherd;
     }
 }

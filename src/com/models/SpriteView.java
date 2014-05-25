@@ -37,6 +37,7 @@ public class SpriteView extends StackPane {
     protected SpriteView follower;
     protected SpriteView following;
     protected IntegerProperty number = new SimpleIntegerProperty();
+    private boolean isMoving = false;
 
     public SpriteView(Image spriteSheet, SpriteView following) {
         this(spriteSheet, following.getLocation().offset(-following.getDirection().getXOffset(), -following.getDirection().getYOffset()));
@@ -76,22 +77,33 @@ public class SpriteView extends StackPane {
     }
 
     public void moveTo(Location loc) {
+        isMoving = true;
         walking = new Timeline(Animation.INDEFINITE,
-            new KeyFrame(Duration.seconds(.01), new KeyValue(direction, location.getValue().directionTo(loc))),
-            new KeyFrame(Duration.seconds(1), new KeyValue(translateXProperty(), loc.getX() * Main.CELL_SIZE)),
-            new KeyFrame(Duration.seconds(1), new KeyValue(translateYProperty(), loc.getY() * Main.CELL_SIZE)),
-            new KeyFrame(Duration.seconds(.25), new KeyValue(frame, 0)),
-            new KeyFrame(Duration.seconds(.5), new KeyValue(frame, 1)),
-            new KeyFrame(Duration.seconds(.75), new KeyValue(frame, 2)),
-            new KeyFrame(Duration.seconds(1), new KeyValue(frame, 1))
+                new KeyFrame(Duration.seconds(.01), new KeyValue(direction, location.getValue().directionTo(loc))),
+                new KeyFrame(Duration.seconds(1), new KeyValue(translateXProperty(), loc.getX() * Main.CELL_SIZE)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(translateYProperty(), loc.getY() * Main.CELL_SIZE)),
+                new KeyFrame(Duration.seconds(.25), new KeyValue(frame, 0)),
+                new KeyFrame(Duration.seconds(.5), new KeyValue(frame, 1)),
+                new KeyFrame(Duration.seconds(.75), new KeyValue(frame, 2)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(frame, 1))
         );
         walking.setOnFinished(e -> {
+            isMoving = false;
             location.setValue(loc);
-            if (arrivalHandler != null) {
+            if(arrivalHandler != null) {
                 arrivalHandler.handle(e);
+            }
+
+            if(this instanceof Lion) {
+                Lion lion = (Lion)this;
+                if(lion.getMoveQueue() > 0) {
+                    lion.move(lion.calculateMoveDirection());
+                    lion.reduceMoveQueue();
+                }
             }
         });
         Application.invokeLater(walking::play);
+
     }
 
     public void setDirection(Direction direction) {
@@ -124,5 +136,9 @@ public class SpriteView extends StackPane {
     }
     public Color getColor() {
         return color;
+    }
+
+    public boolean isMoving() {
+        return isMoving;
     }
 }

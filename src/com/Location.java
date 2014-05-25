@@ -24,6 +24,27 @@ public class Location {
             return (loc.cell_y > cell_y) ? Direction.DOWN : Direction.UP;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+
+        if(cell_x != location.cell_x) return false;
+        if(cell_y != location.cell_y) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = cell_x;
+        result = 31 * result + cell_y;
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Location{" +
