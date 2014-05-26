@@ -76,9 +76,6 @@ public class Main extends Application {
                 rect.setFill(Color.rgb(0, 0, 0, 0));
                 rect.setStrokeType(StrokeType.INSIDE);
                 rect.setStroke(Color.BLACK);
-                final int x = i;
-                final int y = j;
-                rect.setOnMousePressed(event -> mary.moveTo(new Location(x, y)));
                 cells.getChildren().add(rect);
             }
         }
