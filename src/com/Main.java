@@ -51,7 +51,7 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
-        populateCells(root, mary);
+        populateCells(root);
         root.getChildren().add(mary);
         addKeyHandler(scene, mary);
 
@@ -66,7 +66,7 @@ public class Main extends Application {
 
     }
 
-    private void populateCells(Group root, final Mary mary) {
+    private void populateCells(Group root) {
         // Gratuitous use of lambdas to do nested iteration!
         Group cells = new Group();
 
