@@ -44,6 +44,24 @@ public class Shepherd extends SpriteView {
         };
     }
     public void move(Direction direction) {
+       //
+
+        /*int board_width = Main.BOARD_WIDTH;
+        int board_hight = Main.BOARD_HEIGHT;
+        //int x = direction.getXOffset();
+        //int y = direction.getYOffset();
+        //locTest.toString();
+        */
+        Location locTest = location.getValue().offset(direction.getXOffset(), direction.getYOffset());
+        int x = locTest.getX();
+        int y = locTest.getY();
+
+        if (x < 0 || y > 5 || y < 0 || x > 9){
+            return;
+        }
+
+        //
+
         if (walking != null && walking.getStatus().equals(Animation.Status.RUNNING))
             return;
         moveTo(location.getValue().offset(direction.getXOffset(), direction.getYOffset()));

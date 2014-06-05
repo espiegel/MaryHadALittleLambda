@@ -12,6 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
+import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.*;
 
 public class Main extends Application {
 
@@ -23,6 +26,7 @@ public class Main extends Application {
     public static final int BOARD_WIDTH = HORIZONTAL_CELLS * CELL_SIZE;
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
+    private static int moveCount = 0;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -51,10 +55,39 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(8,0));
+        Lion lion = new Lion(new Location(8,5));
+
+
+        //Lion lion = new Lion(john);
+        //SpriteView tail = john;
+
+        //
+        //SpriteView tail = john;
+
+        // Stream.iterate(tail, Lamb::new)
+          //      .skip(1).limit(7)
+            //    .forEach(john.getAnimals()::add);
+        //
+
+
         populateCells(root);
         root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+        root.getChildren().add(john);
+        root.getChildren().add(lion);
+        addKeyHandler(scene, mary, lion);
+        //addKeyHandler(scene, mary);
+        addKeyHandlerForJohn(scene, john);
 
+       /* mary.getAnimals().addListener(new ListChangeListener() {
+            @Override
+            public void onChanged(ListChangeListener.Change change) {
+               int x = 3;
+            }
+        });*/
+       // addKeyHandlerForLion(scene,lion);
+
+        //john.getAnimals().add(lion);
         primaryStage.show();
     }
 
@@ -87,19 +120,106 @@ public class Main extends Application {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
-                case W:
+                //case W:
+
                 case UP:
                     mary.move(Direction.UP);
                     break;
-                case A:
+                //case A:
                 case LEFT:
                     mary.move(Direction.LEFT);
                     break;
-                case S:
+                //case S:
                 case DOWN:
                     mary.move(Direction.DOWN);
                     break;
-                case D:
+                //case D:
+                case RIGHT:
+                    mary.move(Direction.RIGHT);
+                    break;
+                case ESCAPE:
+                    Platform.exit();
+            }
+
+        });
+    }
+
+    private void addKeyHandler(Scene scene, Shepherd mary, Lion lion) {
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+            KeyCode keyCode = ke.getCode();
+            switch (keyCode) {
+                //case W:
+
+                case UP:
+                    mary.move(Direction.UP);
+                    break;
+                //case A:
+                case LEFT:
+                    mary.move(Direction.LEFT);
+                    break;
+                //case S:
+                case DOWN:
+                    mary.move(Direction.DOWN);
+                    break;
+                //case D:
+                case RIGHT:
+                    mary.move(Direction.RIGHT);
+                    break;
+                case ESCAPE:
+                    Platform.exit();
+            }
+            moveCount ++;
+            if(mary.getAnimals().size() > 0  ){
+                ObservableList<SpriteView> ol =  mary.getAnimals();
+                //mary.getAnimals().removeif();
+                for(SpriteView s: ol){
+                    //finding closest ship
+                }
+
+                lion.getDirection();
+                SpriteView sv = ol.get(ol.size()-1);
+
+                Direction d = lion.getLocation().directionTo(sv.getLocation());
+                lion.move(d);
+
+                for(SpriteView s: ol){
+                   if(s.getLocation().getX() == lion.getLocation().getX()
+                           && s.getLocation().getY() == lion.getLocation().getY() ){
+                       ol.remove(s);
+                       lion.incLabel();
+                       break;
+                   }
+                }
+
+                //lion.incLabel();
+
+                moveCount = 0 ;
+            }
+        });
+    }
+
+    private void addKeyHandlerForLion(Scene scene, Shepherd mary, Shepherd john, Lion lion) {
+        ObservableList<SpriteView> johnFollowers =  john.getAnimals();
+        ObservableList<SpriteView> MaryFollowers =  john.getAnimals();
+        //johnFollowers.addListener();
+
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+            KeyCode keyCode = ke.getCode();
+            switch (keyCode) {
+                //case W:
+
+                case UP:
+                    mary.move(Direction.UP);
+                    break;
+                //case A:
+                case LEFT:
+                    mary.move(Direction.LEFT);
+                    break;
+                //case S:
+                case DOWN:
+                    mary.move(Direction.DOWN);
+                    break;
+                //case D:
                 case RIGHT:
                     mary.move(Direction.RIGHT);
                     break;
@@ -108,6 +228,29 @@ public class Main extends Application {
             }
         });
     }
+
+    private void addKeyHandlerForJohn(Scene scene, Shepherd john) {
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+            KeyCode keyCode = ke.getCode();
+            switch (keyCode) {
+                case W:
+                    john.move(Direction.UP);
+                    break;
+                case A:
+                    john.move(Direction.LEFT);
+                    break;
+                case S:
+                    john.move(Direction.DOWN);
+                    break;
+                case D:
+                    john.move(Direction.RIGHT);
+                    break;
+                case ESCAPE:
+                    Platform.exit();
+            }
+        });
+    }
+
 
     public static void main(String[] args) {
         launch(args);
