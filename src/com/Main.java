@@ -1,8 +1,11 @@
 package com;
 
+
 import com.models.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -12,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
+
 
 public class Main extends Application {
 
@@ -24,11 +28,13 @@ public class Main extends Application {
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
 
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Mary Had a Little Lambda");
         Group root = new Group();
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT, Color.WHITE);
+
         primaryStage.setScene(scene);
         populateBackground(root);
 
@@ -51,9 +57,16 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(0, 0));
+        //Lion lion = new Lion(new Location(9, 5));
+
         populateCells(root);
         root.getChildren().add(mary);
+        root.getChildren().add(john);
+        //root.getChildren().add(lion);
+
         addKeyHandler(scene, mary);
+        addKeyHandler1(scene, john);
 
         primaryStage.show();
     }
@@ -87,22 +100,94 @@ public class Main extends Application {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
-                case W:
                 case UP:
+                    if(mary.getLocation().getY() == 0)
+                    {
+                        break;
+                    }
                     mary.move(Direction.UP);
                     break;
-                case A:
                 case LEFT:
+                    if(mary.getLocation().getX() == 0)
+                    {
+                        break;
+                    }
                     mary.move(Direction.LEFT);
                     break;
-                case S:
                 case DOWN:
+
+                    if(mary.getLocation().getY() == 5)
+                    {
+                        break;
+                    }
+
                     mary.move(Direction.DOWN);
                     break;
-                case D:
                 case RIGHT:
+                    if(mary.getLocation().getX() == 9)
+                    {
+                        break;
+                    }
                     mary.move(Direction.RIGHT);
                     break;
+
+                case ESCAPE:
+                    Platform.exit();
+            }
+        });
+    }
+
+    private void addKeyHandler1(Scene scene, Shepherd mary) {
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+            KeyCode keyCode = ke.getCode();
+            switch (keyCode) {
+                case W:
+                    if(mary.getLocation().getY() == 0)
+                    {
+                        break;
+                    }
+                    mary.move(Direction.UP);
+                    break;
+
+                case A:
+                    if(mary.getLocation().getX() == 0)
+                    {
+                        break;
+                    }
+                    mary.move(Direction.LEFT);
+                    break;
+
+                case S:
+
+                    if(mary.getLocation().getY() == 5)
+                    {
+                        break;
+                    }
+
+                    mary.move(Direction.DOWN);
+                    break;
+
+                case D:
+                    if(mary.getLocation().getX() == 9)
+                    {
+                        break;
+                    }
+                    mary.move(Direction.RIGHT);
+                    break;
+                case Q:
+                    mary.moveTo(new Location(0,0));
+                    break;
+                case E:
+                    mary.moveTo(new Location(9,0));
+                    break;
+                case Z:
+                    mary.moveTo(new Location(0,5));
+                    break;
+                case C:
+                    mary.moveTo(new Location(9,5));
+                    break;
+
+
                 case ESCAPE:
                     Platform.exit();
             }

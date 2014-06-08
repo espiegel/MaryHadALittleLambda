@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 
 public class Shepherd extends SpriteView {
     private ObservableList<SpriteView> animals;
+
     public ObservableList<SpriteView> getAnimals() {
         return animals;
     }
@@ -49,8 +50,9 @@ public class Shepherd extends SpriteView {
         moveTo(location.getValue().offset(direction.getXOffset(), direction.getYOffset()));
         animals.stream().reduce(
                 location.get(),                (loc, sprt) -> {
-                    sprt.moveTo(loc);
-                    return sprt.location.get();
-                }, (loc1, loc2) -> loc1);
+            sprt.moveTo(loc);
+            return sprt.location.get();
+        }, (loc1, loc2) -> loc1);
     }
+
 }

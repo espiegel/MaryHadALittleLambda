@@ -1,5 +1,8 @@
 package com;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+
 public class Location {
     int cell_x;
     int cell_y;
