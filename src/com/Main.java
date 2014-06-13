@@ -51,9 +51,15 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        Guy guy = new Guy(new Location(9, 0));
+        Lion lion = new Lion(new Location(9, 5));
+
         populateCells(root);
+
         root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+        root.getChildren().add(guy);
+        root.getChildren().add(lion);
+        addKeyHandler(scene, mary, guy, lion);
 
         primaryStage.show();
     }
@@ -70,8 +76,8 @@ public class Main extends Application {
         // Gratuitous use of lambdas to do nested iteration!
         Group cells = new Group();
 
-        for(int i=0;i<HORIZONTAL_CELLS;i++) {
-            for(int j=0;j<VERTICAL_CELLS;j++) {
+        for (int i = 0; i < HORIZONTAL_CELLS; i++) {
+            for (int j = 0; j < VERTICAL_CELLS; j++) {
                 Rectangle rect = new Rectangle(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 rect.setFill(Color.rgb(0, 0, 0, 0));
                 rect.setStrokeType(StrokeType.INSIDE);
@@ -83,29 +89,52 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd mary, Shepherd guy, Lion lion) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
                 case W:
+                    if (guy.getLocation().cell_y > 0) guy.move(Direction.UP);
+                    break;
                 case UP:
-                    mary.move(Direction.UP);
+                    if (mary.getLocation().cell_y > 0) mary.move(Direction.UP);
                     break;
                 case A:
+                    if (guy.getLocation().cell_x > 0) guy.move(Direction.LEFT);
+                    break;
                 case LEFT:
-                    mary.move(Direction.LEFT);
+                    if (mary.getLocation().cell_x > 0) mary.move(Direction.LEFT);
                     break;
                 case S:
+                    if (guy.getLocation().cell_y < 5) guy.move(Direction.DOWN);
+                    break;
                 case DOWN:
-                    mary.move(Direction.DOWN);
+                    if (mary.getLocation().cell_y < 5) mary.move(Direction.DOWN);
                     break;
                 case D:
+                    if (guy.getLocation().cell_x < 9) guy.move(Direction.RIGHT);
+                    break;
                 case RIGHT:
-                    mary.move(Direction.RIGHT);
+                    if (mary.getLocation().cell_x < 9) mary.move(Direction.RIGHT);
                     break;
                 case ESCAPE:
                     Platform.exit();
             }
+            if (!mary.getAnimals().isEmpty()) {
+                switch (mary.getDirection()) {
+                    case UP:
+                    case DOWN:
+                        lion.move(mary.getLocation().getY() <= lion.getLocation().getY() ? Direction.UP : Direction.DOWN);
+                        break;
+
+                    case RIGHT:
+                    case LEFT:
+                        lion.move(mary.getLocation().getX() <= lion.getLocation().getX() ? Direction.LEFT : Direction.RIGHT);
+                        break;
+                }
+            }
+
+            System.out.println(mary.getLocation());
         });
     }
 

@@ -16,11 +16,8 @@ public class Barn extends MapObject {
     }
     @Override
     public void visit(Shepherd s) {
-        SpriteView tail = s.getAnimals().isEmpty() ?
-                s : s.getAnimals().get(s.getAnimals().size() - 1);
+        SpriteView tail = s.getAnimals().isEmpty() ? s : s.getAnimals().get(s.getAnimals().size() - 1);
 
-        Stream.iterate(tail, Lamb::new)
-                .skip(1).limit(7)
-                .forEach(s.getAnimals()::add);
+        Stream.iterate(tail, Lamb::new).skip(1).limit(7).forEach(s.getAnimals()::add);
     }
 }

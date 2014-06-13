@@ -48,9 +48,19 @@ public class Shepherd extends SpriteView {
             return;
         moveTo(location.getValue().offset(direction.getXOffset(), direction.getYOffset()));
         animals.stream().reduce(
-                location.get(),                (loc, sprt) -> {
+                location.get(), (loc, sprt) -> {
                     sprt.moveTo(loc);
                     return sprt.location.get();
                 }, (loc1, loc2) -> loc1);
+    }
+
+    @Override
+    public Location getLocation() {
+        return super.getLocation();
+    }
+
+    @Override
+    public void setLocation(Location loc) {
+        super.setLocation(loc);
     }
 }

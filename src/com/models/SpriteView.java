@@ -125,4 +125,8 @@ public class SpriteView extends StackPane {
     public Color getColor() {
         return color;
     }
+
+    public void setLocation (Location loc) {
+        location.setValue(loc);
+    }
 }

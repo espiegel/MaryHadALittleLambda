@@ -7,6 +7,8 @@ public class Location {
     public Location(int cell_x, int cell_y) {
         this.cell_x = cell_x;
         this.cell_y = cell_y;
+
+        if(cell_x <= 0) this.cell_x = 0;
     }
     public int getX() {
         return cell_x;
@@ -14,6 +16,15 @@ public class Location {
     public int getY() {
         return cell_y;
     }
+
+    public void setCell_x(int cell_x) {
+        this.cell_x = cell_x;
+    }
+
+    public void setCell_y(int cell_y) {
+        this.cell_y = cell_y;
+    }
+
     public Location offset(int x, int y) {
         return new Location(cell_x + x, cell_y + y);
     }
