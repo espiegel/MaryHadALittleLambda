@@ -55,7 +55,18 @@ public class Main extends Application {
         root.getChildren().add(mary);
         addKeyHandler(scene, mary);
 
+        John john = new John(new Location(HORIZONTAL_CELLS-1,0));
+        populateCells(root);
+        root.getChildren().add(john);
+        addKeyHandlerJohn(scene, john);
+
+        Lion lion = new Lion(new Location(HORIZONTAL_CELLS-1,VERTICAL_CELLS-1));
+        //populateCells(root);
+        root.getChildren().add(lion);
+
+
         primaryStage.show();
+
     }
 
     private void populateBackground(Group root) {
@@ -87,22 +98,117 @@ public class Main extends Application {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
-                case W:
                 case UP:
-                    mary.move(Direction.UP);
+                    //System.out.println(mary);
+                    if (mary.getLocation().getY() == 0 ){
+                        System.out.println("Mary is at the top edge");
+                    }
+                    else {
+                        mary.move(Direction.UP);
+                    }
+                    break;
+                case LEFT:
+                    if (mary.getLocation().getX() == 0 ){
+                        System.out.println("Mary is at the left edge");
+                    }
+                    else {
+                        mary.move(Direction.LEFT);
+                    }
+                    break;
+                case DOWN:
+                    if (mary.getLocation().getY() == VERTICAL_CELLS-1){
+                        System.out.println("Mary is at the bottom edge");
+                    }
+                    else {
+                        mary.move(Direction.DOWN);
+                    }
+                    break;
+                case RIGHT:
+                    if (mary.getLocation().getX() == HORIZONTAL_CELLS-1){
+                        System.out.println("Mary is at the right edge");
+                    }
+                    else {
+                        mary.move(Direction.RIGHT);
+                    }
+                    break;
+                case ESCAPE:
+                    Platform.exit();
+            }
+        });
+    }
+
+    private void addKeyHandlerJohn(Scene scene, Shepherd john) {
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+            KeyCode keyCode = ke.getCode();
+            switch (keyCode) {
+                case W:
+
+                    //System.out.println(mary);
+                    if (john.getLocation().getY() == 0 ){
+                        System.out.println("John is at the top edge");
+                    }
+                    else {
+                        john.move(Direction.UP);
+                    }
                     break;
                 case A:
-                case LEFT:
-                    mary.move(Direction.LEFT);
+
+                    if (john.getLocation().getX() == 0 ){
+                        System.out.println("John is at the left edge");
+                    }
+                    else {
+                        john.move(Direction.LEFT);
+                    }
                     break;
                 case S:
-                case DOWN:
-                    mary.move(Direction.DOWN);
+                    if (john.getLocation().getY() == VERTICAL_CELLS-1){
+                        System.out.println("John is at the bottom edge");
+                    }
+                    else {
+                        john.move(Direction.DOWN);
+                    }
                     break;
                 case D:
-                case RIGHT:
-                    mary.move(Direction.RIGHT);
+                    if (john.getLocation().getX() == HORIZONTAL_CELLS-1){
+                        System.out.println("John is at the right edge");
+                    }
+                    else {
+                        john.move(Direction.RIGHT);
+                    }
                     break;
+                case Q:
+                    if (john.getLocation().getY() == 0 || john.getLocation().getX() == 0 ){
+                        System.out.println("John is at the top edge or at the left edge");
+                    }
+                    else {
+                        john.move(Direction.TOP_LEFT);
+                    }
+                    break;
+                case E:
+                    if (john.getLocation().getY() == 0 || john.getLocation().getX() == HORIZONTAL_CELLS-1 ){
+                        System.out.println("John is at the top edge or at the right edge");
+                    }
+                    else {
+                        john.move(Direction.TOP_RIGHT);
+                    }
+                    break;
+                case Z:
+                    if (john.getLocation().getY() == VERTICAL_CELLS-1 || john.getLocation().getX() == 0 ){
+                        System.out.println("John is at the bottom edge or at the left edge");
+                    }
+                    else {
+                        john.move(Direction.BOTTOM_LEFT);
+                    }
+                    break;
+                case C:
+                    if (john.getLocation().getY() == VERTICAL_CELLS-1 || john.getLocation().getX() == HORIZONTAL_CELLS-1 ){
+                        System.out.println("John is at the bottom edge or at the right edge");
+                    }
+                    else {
+                        john.move(Direction.BOTTOM_RIGHT);
+                    }
+                    break;
+
                 case ESCAPE:
                     Platform.exit();
             }

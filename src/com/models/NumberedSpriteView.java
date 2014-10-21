@@ -1,5 +1,6 @@
 package com.models;
 
+import com.Location;
 import com.Main;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -13,4 +14,13 @@ public abstract class NumberedSpriteView extends SpriteView {
         label.setFont(Font.font("Impact", 12 * Main.SCALE));
         getChildren().add(label);
     }
+
+    public  NumberedSpriteView(Image spriteSheet, Location loc) {
+        super(spriteSheet, loc);
+        label.textProperty().bind(number.asString());
+        label.setFont(Font.font("Impact", 12 * Main.SCALE));
+        getChildren().add(label);
+    }
 }
+
+
