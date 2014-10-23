@@ -13,6 +13,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class Main extends Application {
 
     public static final int SCALE = 4;
@@ -23,12 +25,16 @@ public class Main extends Application {
     public static final int BOARD_WIDTH = HORIZONTAL_CELLS * CELL_SIZE;
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
-
+    private ArrayList<Shepherd> sheperdList = new ArrayList<Shepherd>();
+    private int doubleStep =0;
+    private Lion lion;
+    public static  Group root;
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Mary Had a Little Lambda");
-        Group root = new Group();
+        root = new Group();
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT, Color.WHITE);
+
         primaryStage.setScene(scene);
         populateBackground(root);
 
@@ -51,10 +57,16 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(HORIZONTAL_CELLS-1,0));
+        sheperdList.add(mary);
+        sheperdList.add(john);
+        lion = new Lion(new Location(HORIZONTAL_CELLS,VERTICAL_CELLS-1));
         populateCells(root);
         root.getChildren().add(mary);
         addKeyHandler(scene, mary);
-
+        root.getChildren().add(john);
+        addKeyHandler(scene, john);
+        root.getChildren().add(lion);
         primaryStage.show();
     }
 
@@ -84,29 +96,89 @@ public class Main extends Application {
     }
 
     private void addKeyHandler(Scene scene, Shepherd mary) {
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
-            KeyCode keyCode = ke.getCode();
-            switch (keyCode) {
-                case W:
-                case UP:
-                    mary.move(Direction.UP);
-                    break;
-                case A:
-                case LEFT:
-                    mary.move(Direction.LEFT);
-                    break;
-                case S:
-                case DOWN:
-                    mary.move(Direction.DOWN);
-                    break;
-                case D:
-                case RIGHT:
-                    mary.move(Direction.RIGHT);
-                    break;
-                case ESCAPE:
-                    Platform.exit();
-            }
-        });
+
+
+        if(mary.getMyType()==AvatarType.MARY) {
+            scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+                KeyCode keyCode = ke.getCode();
+                switch (keyCode) {
+
+                    case UP:
+                        mary.move(Direction.UP);
+                        break;
+
+                    case LEFT:
+                        mary.move(Direction.LEFT);
+                        break;
+
+                    case DOWN:
+                        mary.move(Direction.DOWN);
+                        break;
+
+                    case RIGHT:
+                        mary.move(Direction.RIGHT);
+                        break;
+                    case ESCAPE:
+                        Platform.exit();
+                }
+
+                doubleStep  = (doubleStep+1)%4;
+                if(doubleStep==0){
+                    ArrayList<SpriteView> lambs = new ArrayList<SpriteView>();
+                    for(Shepherd sheperd : sheperdList){
+                        lambs.addAll(sheperd.getAnimals());
+                    }
+
+                    lion.smellShips(lambs);
+                }
+
+            });
+        }
+        else if(mary.getMyType() == AvatarType.JOHN){
+            scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+                KeyCode keyCode = ke.getCode();
+                switch (keyCode) {
+                    case W:
+                        mary.move(Direction.UP);
+                        break;
+                    case A:
+                        mary.move(Direction.LEFT);
+                        break;
+                    case S:
+                        mary.move(Direction.DOWN);
+                        break;
+                    case D:
+                        mary.move(Direction.RIGHT);
+                        break;
+                    case E:
+                        mary.move(Direction.UP_RIGHT);
+                        break;
+                    case Q:
+                        mary.move(Direction.UP_LEFT);
+                        break;
+                    case C:
+                        mary.move(Direction.DOWN_RIGHT);
+                        break;
+                    case Z:
+                        mary.move(Direction.DOWN_LEFT);
+                        break;
+                    case ESCAPE:
+                        Platform.exit();
+                }
+
+                doubleStep  = (doubleStep+1)%4;
+                if(doubleStep==0){
+                    ArrayList<SpriteView> lambs = new ArrayList<SpriteView>();
+                    for(Shepherd sheperd : sheperdList){
+                        lambs.addAll(sheperd.getAnimals());
+                    }
+
+                    lion.smellShips(lambs);
+                }
+
+            });
+        }
+
     }
 
     public static void main(String[] args) {

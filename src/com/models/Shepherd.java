@@ -13,11 +13,13 @@ import javafx.scene.image.Image;
 
 public class Shepherd extends SpriteView {
     private ObservableList<SpriteView> animals;
+    protected AvatarType Type;
     public ObservableList<SpriteView> getAnimals() {
         return animals;
     }
-    public Shepherd(Image spriteSheet, Location loc) {
+    public Shepherd(Image spriteSheet, Location loc,AvatarType type) {
         super(spriteSheet, loc);
+        Type = type;
         animals = FXCollections.observableArrayList();
         animals.addListener((ListChangeListener) c -> {
             ObservableList<Node> children = ((Group) getParent()).getChildren();
@@ -43,14 +45,38 @@ public class Shepherd extends SpriteView {
             }
         };
     }
+    public AvatarType getMyType(){
+        return Type;
+    }
     public void move(Direction direction) {
         if (walking != null && walking.getStatus().equals(Animation.Status.RUNNING))
             return;
+        if(!legalStep(direction)){
+            //do nothing
+            return;
+        }
         moveTo(location.getValue().offset(direction.getXOffset(), direction.getYOffset()));
         animals.stream().reduce(
                 location.get(),                (loc, sprt) -> {
                     sprt.moveTo(loc);
                     return sprt.location.get();
                 }, (loc1, loc2) -> loc1);
+    }
+
+    private boolean legalStep(Direction dir){
+        if(location.getValue().getX()+dir.getXOffset()>=Main.HORIZONTAL_CELLS){
+            return false;
+        }
+        else if(location.getValue().getY()+dir.getYOffset()>=Main.VERTICAL_CELLS){
+            return false;
+        }
+        else if(location.getValue().getX()+dir.getXOffset()<0) {
+            return false;
+        }
+        else if(location.getValue().getY()+dir.getYOffset()<0){
+            return false;
+        }
+
+        return true;
     }
 }
