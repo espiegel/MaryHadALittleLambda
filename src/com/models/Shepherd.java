@@ -19,7 +19,7 @@ public class Shepherd extends SpriteView {
     public Shepherd(Image spriteSheet, Location loc) {
         super(spriteSheet, loc);
         animals = FXCollections.observableArrayList();
-        animals.addListener((ListChangeListener) c -> {
+        animals.addListener((ListChangeListener<Node>) c -> {
             ObservableList<Node> children = ((Group) getParent()).getChildren();
             while (c.next()) {
                 if (c.wasAdded() || c.wasRemoved() || c.wasReplaced()) {
