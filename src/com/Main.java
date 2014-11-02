@@ -3,6 +3,8 @@ package com;
 import com.models.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -43,18 +45,32 @@ public class Main extends Application {
         root.getChildren().add(new MapObject.ChickenCoop(new Location(5, 4)));
         // And this one FlatMap:
         root.getChildren().add(new MapObject.Nest(new Location(3, 4)));
+
+        //Check Fox for scaling:
+
         // And finally aggregation:
         Fox fox = new Fox(new Location(9, 4));
         fox.setDirection(Direction.LEFT);
         fox.setScaleX(.5);
         fox.setScaleY(.5);
-        root.getChildren().add(fox);*/
+        root.getChildren().add(fox);
+        */
 
+        //Create new sheps:
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(9,0));
+        //Lion lion = new Lion(new Location(9,5));
+        Lion lion = new Lion(new Location(7,3));
+        //...
         populateCells(root);
+        //Add children:
         root.getChildren().add(mary);
+        root.getChildren().add(john);
+        root.getChildren().add(lion); // Add a lion
+        //Mary is effected by both WASD + direc-keys
         addKeyHandler(scene, mary);
-
+        addKeyHandlerForJohn(scene, john);
+        //Start:
         primaryStage.show();
     }
 
@@ -84,24 +100,67 @@ public class Main extends Application {
     }
 
     private void addKeyHandler(Scene scene, Shepherd mary) {
+
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+
+            //LionCounter
+
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
-                case W:
+                //case W:
                 case UP:
                     mary.move(Direction.UP);
                     break;
-                case A:
+                //case A:
                 case LEFT:
                     mary.move(Direction.LEFT);
                     break;
-                case S:
+                //case S:
                 case DOWN:
                     mary.move(Direction.DOWN);
                     break;
-                case D:
+                //case D:
                 case RIGHT:
                     mary.move(Direction.RIGHT);
+                    break;
+                case ESCAPE:
+                    Platform.exit();
+            }
+        });
+    }
+
+    //KeyHandler for John:
+    private void addKeyHandlerForJohn(Scene scene, Shepherd john) {
+
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
+
+            //lionCounter.increaseVal();
+
+            KeyCode keyCode = ke.getCode();
+            switch (keyCode) {
+                case W:
+                    john.move(Direction.UP);
+                    break;
+                case A:
+                    john.move(Direction.LEFT);
+                    break;
+                case S:
+                    john.move(Direction.DOWN);
+                    break;
+                case D:
+                    john.move(Direction.RIGHT);
+                    break;
+                case Q: //Top-left
+                    john.move(Direction.TOP_LEFT);
+                    break;
+                case E: //Top-right
+                    john.move(Direction.TOP_RIGHT);
+                    break;
+                case Z://Bottom-left
+                    john.move(Direction.BOTTOM_LEFT);
+                    break;
+                case C://Bottom-right
+                    john.move(Direction.BOTTOM_RIGHT);
                     break;
                 case ESCAPE:
                     Platform.exit();

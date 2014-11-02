@@ -49,6 +49,15 @@ public class Shepherd extends SpriteView {
     public void move(Direction direction) {
         if(walking != null && walking.getStatus().equals(Animation.Status.RUNNING))
             return;
+        //Mine:
+        if(location.getValue().getX() + direction.getXOffset() < 0 ||
+                location.getValue().getY() + direction.getYOffset() < 0 ){
+            return;
+        }
+        if(location.getValue().getX() + direction.getXOffset() >= Main.HORIZONTAL_CELLS ||
+                location.getValue().getY() + direction.getYOffset() >= Main.VERTICAL_CELLS)
+            return;
+        //...
         moveTo(location.getValue().offset(direction.getXOffset(), direction.getYOffset()));
         animals.stream().reduce(
                 location.get(), (loc, sprt) -> {
