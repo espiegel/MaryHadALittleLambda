@@ -35,25 +35,33 @@ public class Main extends Application {
         // This shows object generation:
         root.getChildren().add(new Barn(new Location(2, 3)));
 
-        /*// This one shows filtering
-        root.getChildren().add(new MapObject.Rainbow(new Location(5, 0)));
+        // This one shows filtering
+        root.getChildren().add(new Rainbow(new Location(5, 0)));
         // This one demonstrates the additions to the List API:
-        root.getChildren().add(new MapObject.Church(new Location(6, 2)));
+        root.getChildren().add(new Church(new Location(6, 2)));
         // This demonstrates Map:
-        root.getChildren().add(new MapObject.ChickenCoop(new Location(5, 4)));
+       // root.getChildren().add(new ChickenCoop(new Location(5, 4)));
         // And this one FlatMap:
-        root.getChildren().add(new MapObject.Nest(new Location(3, 4)));
-        // And finally aggregation:
+       // root.getChildren().add(new Nest(new Location(3, 4)));
+
+       // And finally aggregation:
         Fox fox = new Fox(new Location(9, 4));
         fox.setDirection(Direction.LEFT);
         fox.setScaleX(.5);
         fox.setScaleY(.5);
-        root.getChildren().add(fox);*/
+        root.getChildren().add(fox);
 
         Mary mary = new Mary(new Location(0, 3));
         populateCells(root);
         root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+
+        John john = new John((new Location(HORIZONTAL_CELLS-1,0)));
+        populateCells(root);
+        root.getChildren().add(john);
+
+
+
+        addKeyHandler(scene, mary, john);
 
         primaryStage.show();
     }
@@ -83,31 +91,56 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd mary, Shepherd john) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
-                case W:
                 case UP:
                     mary.move(Direction.UP);
                     break;
-                case A:
                 case LEFT:
                     mary.move(Direction.LEFT);
                     break;
-                case S:
                 case DOWN:
                     mary.move(Direction.DOWN);
                     break;
-                case D:
                 case RIGHT:
                     mary.move(Direction.RIGHT);
                     break;
+                case W:
+                    john.move(Direction.UP);
+                    break;
+                case A:
+                    john.move(Direction.LEFT);
+                    break;
+                case S:
+                    john.move(Direction.DOWN);
+                    break;
+                case D:
+                    john.move(Direction.RIGHT);
+                    break;
+                case Q:
+                    john.move(Direction.TOP_LEFT);
+                    break;
+                case E:
+                    john.move(Direction.TOP_RIGHT);
+                    break;
+                case Z:
+                    john.move(Direction.BOTTOM_LEFT);
+                    break;
+                case C:
+                    john.move(Direction.BOTTOM_RIGHT);
+                    break;
+
+
                 case ESCAPE:
                     Platform.exit();
             }
         });
     }
+
+   
+    
 
     public static void main(String[] args) {
         launch(args);

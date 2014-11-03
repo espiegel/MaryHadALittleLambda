@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 
 public class Church extends MapObject {
     // Image by LovelyBlue: http://l0velyblue.deviantart.com/art/Church-350736943
-    static final Image CHURCH = SpriteView.loadImage("images/church.png");
+    static final Image CHURCH = SpriteView.loadImage("../images/church.png");
     LongProperty mealsServed = new SimpleLongProperty();
     public Church(Location loc) {
         super(CHURCH, loc);

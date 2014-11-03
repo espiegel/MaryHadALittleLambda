@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import com.Location;
 
 public class Rainbow extends MapObject {
-    static final Image RAINBOW = SpriteView.loadImage("images/rainbow.png");
+    static final Image RAINBOW = SpriteView.loadImage("../images/rainbow.png");
     public Rainbow(Location loc) {
         super(RAINBOW, loc);
         startAnimation();

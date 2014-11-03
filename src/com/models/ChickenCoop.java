@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class ChickenCoop extends MapObject {
     // Image by LovelyBlue: http://l0velyblue.deviantart.com/art/chickencoop-350736803
-    static final Image CHICKEN_COOP = SpriteView.loadImage("images/chicken-coop.png");
+    static final Image CHICKEN_COOP = SpriteView.loadImage("../images/chicken-coop.png");
     public ChickenCoop(Location loc) {
         super(CHICKEN_COOP, loc);
     }
