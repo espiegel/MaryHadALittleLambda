@@ -36,7 +36,7 @@ public class SpriteView extends StackPane {
     protected Timeline walking;
     protected SpriteView follower;
     protected SpriteView following;
-    protected IntegerProperty number = new SimpleIntegerProperty();
+    public IntegerProperty number = new SimpleIntegerProperty();
 
     public SpriteView(Image spriteSheet, SpriteView following) {
         this(spriteSheet, following.getLocation().offset(-following.getDirection().getXOffset(), -following.getDirection().getYOffset()));

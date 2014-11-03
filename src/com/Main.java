@@ -24,6 +24,8 @@ public class Main extends Application {
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
 
+    public static int count_moves;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Mary Had a Little Lambda");
@@ -51,9 +53,14 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(HORIZONTAL_CELLS-1, 0));
+        Lion lion = new Lion(new Location(HORIZONTAL_CELLS-1, VERTICAL_CELLS-1));
         populateCells(root);
         root.getChildren().add(mary);
+        root.getChildren().add(john);
+        root.getChildren().add(lion);
         addKeyHandler(scene, mary);
+        addKeyHandler(scene, john);
 
         primaryStage.show();
     }
@@ -83,26 +90,50 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd shep) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
-            switch (keyCode) {
+           switch (keyCode) {
                 case W:
-                case UP:
-                    mary.move(Direction.UP);
+                    if(shep instanceof John) shep.move(Direction.UP);
+                    break;
+               case UP:
+                    if(shep instanceof Mary) shep.move(Direction.UP);
                     break;
                 case A:
+                    if(shep instanceof John) shep.move(Direction.LEFT);
+                    break;
                 case LEFT:
-                    mary.move(Direction.LEFT);
+                    if(shep instanceof Mary) shep.move(Direction.LEFT);
                     break;
                 case S:
+                    if(shep instanceof John) shep.move(Direction.DOWN);
+                    break;
                 case DOWN:
-                    mary.move(Direction.DOWN);
+                    if(shep instanceof Mary) shep.move(Direction.DOWN);
                     break;
                 case D:
-                case RIGHT:
-                    mary.move(Direction.RIGHT);
+                    if(shep instanceof John) shep.move(Direction.RIGHT);
                     break;
+                case RIGHT:
+                    if(shep instanceof Mary) shep.move(Direction.RIGHT);
+                    break;
+               case Q:
+                   if(shep instanceof John)
+                       shep.move(Direction.UP_LEFT);
+                   break;
+               case E:
+                   if(shep instanceof John)
+                       shep.move(Direction.UP_RIGHT);
+                   break;
+               case C:
+                   if(shep instanceof John)
+                       shep.move(Direction.DOWN_RIGHT);
+                   break;
+               case Z:
+                   if(shep instanceof John)
+                       shep.move(Direction.DOWN_LEFT);
+                   break;
                 case ESCAPE:
                     Platform.exit();
             }
