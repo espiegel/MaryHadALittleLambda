@@ -51,9 +51,15 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(9, 0));
+        Lion lion = new Lion(new Location(9, 5));
+
         populateCells(root);
         root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+        root.getChildren().add(john);
+        root.getChildren().add(lion);
+
+        addKeyHandler(scene, mary, john);
 
         primaryStage.show();
     }
@@ -83,26 +89,49 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd mary, Shepherd john) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
                 case W:
+                    john.move(Direction.UP);
+                    break;
                 case UP:
                     mary.move(Direction.UP);
                     break;
                 case A:
+                    john.move(Direction.LEFT);
+                    break;
                 case LEFT:
                     mary.move(Direction.LEFT);
                     break;
                 case S:
+                    john.move(Direction.DOWN);
+                    break;
                 case DOWN:
                     mary.move(Direction.DOWN);
                     break;
                 case D:
+                    john.move(Direction.RIGHT);
+                    break;
                 case RIGHT:
                     mary.move(Direction.RIGHT);
                     break;
+
+                case Q:
+                    john.move(Direction.TOPLEFT);
+                    break;
+                case E:
+                    john.move(Direction.TOPRIGHT);
+                    break;
+                case Z:
+                    john.move(Direction.BOTTOMLEFT);
+                    break;
+                case C:
+                    john.move(Direction.BOTTOMRIGHT);
+                    break;
+
+
                 case ESCAPE:
                     Platform.exit();
             }

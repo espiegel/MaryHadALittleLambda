@@ -22,5 +22,7 @@ public class Barn extends MapObject {
         Stream.iterate(tail, Lamb::new)
                 .skip(1).limit(7)
                 .forEach(s.getAnimals()::add);
+
+        s.wakeLion();
     }
 }
