@@ -31,4 +31,8 @@ public class Location {
                 ", cell_y=" + cell_y +
                 '}';
     }
+    public boolean equals(Location other) {
+        return this.getX()==other.getX() && this.getY()==other.getY();
+
+    }
 }

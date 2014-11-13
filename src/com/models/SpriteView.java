@@ -33,6 +33,8 @@ public class SpriteView extends StackPane {
     protected IntegerProperty frame = new SimpleIntegerProperty(1);
     protected int spriteWidth;
     protected int spriteHeight;
+    protected int lastWidth;
+    protected int lastHeight;
     protected Timeline walking;
     protected SpriteView follower;
     protected SpriteView following;
@@ -57,6 +59,7 @@ public class SpriteView extends StackPane {
         frame.addListener(updateImage);
         spriteWidth = (int) (spriteSheet.getWidth() / 3);
         spriteHeight = (int) (spriteSheet.getHeight() / 4);
+
         direction.set(Direction.RIGHT);
         getChildren().add(imageView);
     }
@@ -75,7 +78,28 @@ public class SpriteView extends StackPane {
         timeline.play();
     }
 
+    public void increaseSizeByFactor(double factor) {
+        if (lastWidth == 0)
+            lastWidth = spriteWidth;
+        if (lastHeight == 0)
+            lastHeight = spriteHeight;
+
+        double originalWidth = imageView.getImage().getWidth();
+        double originalHeight = imageView.getImage().getHeight();
+        System.out.println(originalHeight + "::" + spriteHeight);
+
+//        spriteHeight=(int)(spriteHeight*factor);
+//        spriteWidth=(int) (spriteWidth*factor);
+
+
+        imageView.setFitHeight(lastHeight*factor);
+        imageView.setFitWidth(lastWidth*factor);
+
+
+    }
+
     public void moveTo(Location loc) {
+
         walking = new Timeline(Animation.INDEFINITE,
             new KeyFrame(Duration.seconds(.01), new KeyValue(direction, location.getValue().directionTo(loc))),
             new KeyFrame(Duration.seconds(1), new KeyValue(translateXProperty(), loc.getX() * Main.CELL_SIZE)),
@@ -87,7 +111,7 @@ public class SpriteView extends StackPane {
         );
         walking.setOnFinished(e -> {
             location.setValue(loc);
-            if (arrivalHandler != null) {
+            if(arrivalHandler != null) {
                 arrivalHandler.handle(e);
             }
         });
@@ -110,6 +134,10 @@ public class SpriteView extends StackPane {
         return location.get();
     }
 
+    public void addLocationListener(ChangeListener<Location> listener) {
+        location.addListener(listener);
+    }
+
     public Direction getDirection() {
         return direction.get();
     }
@@ -125,4 +153,5 @@ public class SpriteView extends StackPane {
     public Color getColor() {
         return color;
     }
+
 }
