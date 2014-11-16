@@ -24,6 +24,22 @@ public class Location {
             return (loc.cell_y > cell_y) ? Direction.DOWN : Direction.UP;
         }
     }
+
+    public boolean sameLoc(Location loc){
+        if((cell_x==loc.getX())&&(cell_y==loc.getY())){
+           return true;
+        }
+        return false;
+    }
+    public double distance(Location loc){
+        int locCell_x = loc.getX();
+        int locCell_y = loc.getY();
+
+
+        double dis = Math.sqrt(Math.pow((this.cell_x - locCell_x), 2) + Math.pow((this.cell_y - locCell_y), 2));
+        return dis;
+    }
+
     @Override
     public String toString() {
         return "Location{" +

@@ -33,4 +33,5 @@ public class Lamb extends NumberedSpriteView {
         direction.addListener(directionListener);
         directionListener.changed(direction, direction.getValue(), direction.getValue());
     }
+
 }
