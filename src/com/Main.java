@@ -24,6 +24,8 @@ public class Main extends Application {
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
 
+    private Lion lion = new Lion(new Location(HORIZONTAL_CELLS - 1, VERTICAL_CELLS - 1));
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Mary Had a Little Lambda");
@@ -51,9 +53,15 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(HORIZONTAL_CELLS - 1, 0));
+        Observer.addShpherd(mary);
+        Observer.addShpherd(john);
         populateCells(root);
-        root.getChildren().add(mary);
+        root.getChildren().addAll(mary, john, lion);
         addKeyHandler(scene, mary);
+        addKeyHandler(scene, john);
+
+        Observer.setLion(lion);
 
         primaryStage.show();
     }
@@ -83,29 +91,42 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private boolean isLegalMove(int x, int y) {
+        return x >= 0 && x < HORIZONTAL_CELLS && y >= 0 && y < VERTICAL_CELLS;
+    }
+
+    private Direction keyToDirection(KeyCode keyCode) {
+        switch (keyCode) {
+            case W:
+            case UP: return Direction.UP;
+            case S:
+            case DOWN: return Direction.DOWN;
+            case D:
+            case RIGHT: return Direction.RIGHT;
+            case A:
+            case LEFT: return Direction.LEFT;
+            case Q: return Direction.UPLEFT;
+            case E: return Direction.UPRIGHT;
+            case Z: return Direction.DOWNLEFT;
+            case C: return Direction.DOWNRIGHT;
+        }
+        return null;
+    }
+
+    private void moveShepherd(Shepherd shepherd, KeyCode keyCode) {
+        if (shepherd.isValidKey(keyCode)) {
+            Location newLocation = shepherd.getNextLocation(keyCode);
+            if (isLegalMove(newLocation.getX(), newLocation.getY())) {
+                shepherd.move(keyToDirection(keyCode));
+                Observer.onMove(shepherd);
+            }
+        }
+    }
+
+    private void addKeyHandler(Scene scene, Shepherd shepherd) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
-            switch (keyCode) {
-                case W:
-                case UP:
-                    mary.move(Direction.UP);
-                    break;
-                case A:
-                case LEFT:
-                    mary.move(Direction.LEFT);
-                    break;
-                case S:
-                case DOWN:
-                    mary.move(Direction.DOWN);
-                    break;
-                case D:
-                case RIGHT:
-                    mary.move(Direction.RIGHT);
-                    break;
-                case ESCAPE:
-                    Platform.exit();
-            }
+            moveShepherd(shepherd, keyCode);
         });
     }
 

@@ -10,8 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 
-public class Shepherd extends SpriteView {
+abstract public class Shepherd extends SpriteView {
     private ObservableList<SpriteView> animals;
 
     public ObservableList<SpriteView> getAnimals() {
@@ -56,4 +57,8 @@ public class Shepherd extends SpriteView {
                     return sprt.location.get();
                 }, (loc1, loc2) -> loc1);
     }
+
+    abstract public boolean isValidKey(KeyCode keyCode);
+
+    abstract public Location getNextLocation(KeyCode keyCode);
 }
