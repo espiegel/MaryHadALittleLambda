@@ -3,8 +3,10 @@ package com;
 import com.models.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -13,8 +15,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+import java.util.Iterator;
 
+public class Main extends Application {
+    int i=0;
     public static final int SCALE = 4;
     public static final int SPRITE_SIZE = 32;
     public static final int CELL_SIZE = SPRITE_SIZE * SCALE;
@@ -51,10 +55,14 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(9, 0));
+        Lion lion = new Lion(new Location(6,5));
         populateCells(root);
         root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+        root.getChildren().add(john);
+        root.getChildren().add(lion);
 
+        addKeyHandler(scene, mary, john,lion);
         primaryStage.show();
     }
 
@@ -83,32 +91,141 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd mary,Shepherd john,Lion lion) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
                 case W:
+                    if(john.getLocation().getY()!=0)
+                        john.move(Direction.UP);
+                    break;
                 case UP:
-                    mary.move(Direction.UP);
+                    if(mary.getLocation().getY()!=0)
+                        mary.move(Direction.UP);
                     break;
                 case A:
+                    if(john.getLocation().getX()!=0)
+                        john.move(Direction.LEFT);
+                    break;
                 case LEFT:
-                    mary.move(Direction.LEFT);
+                    if(mary.getLocation().getX()!=0)
+                        mary.move(Direction.LEFT);
                     break;
                 case S:
+                    if(john.getLocation().getY()!=VERTICAL_CELLS-1)
+                        john.move(Direction.DOWN);
+                    break;
                 case DOWN:
-                    mary.move(Direction.DOWN);
+                    if(mary.getLocation().getY()!=VERTICAL_CELLS-1)
+                        mary.move(Direction.DOWN);
                     break;
                 case D:
+                    if(john.getLocation().getX()!=HORIZONTAL_CELLS-1)
+                        john.move(Direction.RIGHT);
+                    break;
                 case RIGHT:
-                    mary.move(Direction.RIGHT);
+                    if(mary.getLocation().getX()!=HORIZONTAL_CELLS-1)
+                        mary.move(Direction.RIGHT);
+                    break;
+                case Q:
+                    if(john.getLocation().getX()!=0 && john.getLocation().getY()!=0 )
+                        john.move(Direction.UPLEFT);
+                    break;
+                case E:
+                    if(john.getLocation().getX()!=HORIZONTAL_CELLS-1 && john.getLocation().getY()!=0 )
+                        john.move(Direction.UPRIGHT);
+                    break;
+                case Z:
+                    if(john.getLocation().getX()!=0 && john.getLocation().getY()!=VERTICAL_CELLS-1 )
+                        john.move(Direction.DOWNLEFT);
+                    break;
+                case C:
+                    if(john.getLocation().getX()!=HORIZONTAL_CELLS-1 && john.getLocation().getY()!=VERTICAL_CELLS-1 )
+                        john.move(Direction.DOWNRIGHT);
                     break;
                 case ESCAPE:
                     Platform.exit();
             }
+            i++;
+            if (i%2==0) {
+
+                SpriteView sheep = findClosestLamb(mary, john, lion);
+                Location lamloc =null;
+                if (sheep!=null) {
+                    lamloc = sheep.getLocation();
+                        Location lionLoc = lion.getLocation();
+                        int x = lamloc.getX() - lion.getLocation().getX();
+                        int y = lamloc.getY() - lion.getLocation().getY();
+
+                        if(x < 0 && lionLoc.getX() != 0)
+                            lion.moveTo(new Location(lionLoc.getX() - 1, lionLoc.getY()));
+                        else if(x > 0 && lionLoc.getX() != HORIZONTAL_CELLS - 1)
+                            lion.moveTo(new Location(lionLoc.getX() + 1, lionLoc.getY()));
+
+                        if(y < 0 && lionLoc.getY() != 0)
+                            lion.moveTo(new Location(lionLoc.getX(), lionLoc.getY() - 1));
+                        else if(y > 0 && lionLoc.getY() != VERTICAL_CELLS - 1)
+                            lion.moveTo(new Location(lionLoc.getX() + 1, lionLoc.getY() + 1));
+                    sheep = findLamb(mary,john,lion);
+                    if (sheep!=null)
+                        visit(mary,lion,sheep);
+
+                }
+
+            }
+
+
         });
     }
+    private SpriteView findLamb(Shepherd marry,Shepherd john, Lion lion) {
+        Location lionLoc = lion.getLocation();
+        SpriteView curr = null;
+        ObservableList<SpriteView> list = marry.getAnimals();
+        ObservableList<SpriteView> listjohn = john.getAnimals();
+        list.addAll(listjohn);
+        for (i=0;i<list.size();i++)
+        {
+            if (list.get(i).getLocation().getX() == lionLoc.getX() && list.get(i).getLocation().getY()==lionLoc.getY()){
+                curr = list.get(i);
+                break;
+            }
 
+        }
+
+        return curr;
+
+    }
+    public void visit(Shepherd shepherd,Lion lion,SpriteView sheep) {
+
+        lion.setScaleX(lion.getScaleX() + lion.getScaleX()*0.05);
+        lion.setScaleY(lion.getScaleY() + lion.getScaleY()*0.05);
+        shepherd.getAnimals().remove(sheep);
+        lion.number.set(lion.number.getValue().intValue()+1);
+        lion.label.textProperty().bind(lion.number.asString());
+
+
+    }
+    private SpriteView findClosestLamb(Shepherd marry,Shepherd john, Lion lion){
+        Location lionLoc = lion.getLocation();
+        SpriteView curr = null;
+        double curdist = 1000;
+        int i,x,y;
+        ObservableList<SpriteView> list = marry.getAnimals();
+        ObservableList<SpriteView> listjohn = john.getAnimals();
+        list.addAll(listjohn);
+        for (i=0;i<list.size();i++)
+        {
+            x = list.get(i).getLocation().getX(); //
+            y = list.get(i).getLocation().getY();
+            double dist = Math.sqrt((y-lionLoc.getY())*(y-lionLoc.getY()) + (x - lionLoc.getX())*(y-lionLoc.getY()));
+            if (dist<curdist){
+                curdist = dist;
+                curr = list.get(i);
+            }
+        }
+
+        return curr;
+    }
     public static void main(String[] args) {
         launch(args);
     }

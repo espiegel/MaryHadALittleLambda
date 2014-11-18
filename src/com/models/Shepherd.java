@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 
 public class Shepherd extends SpriteView {
     private ObservableList<SpriteView> animals;
-
     public ObservableList<SpriteView> getAnimals() {
         return animals;
     }
