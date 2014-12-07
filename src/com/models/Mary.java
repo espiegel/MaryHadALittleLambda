@@ -9,4 +9,5 @@ public class Mary extends Shepherd {
     public Mary(Location loc) {
         super(MARY, loc);
     }
+
 }

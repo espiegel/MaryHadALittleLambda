@@ -56,4 +56,5 @@ public class Shepherd extends SpriteView {
                     return sprt.location.get();
                 }, (loc1, loc2) -> loc1);
     }
+
 }

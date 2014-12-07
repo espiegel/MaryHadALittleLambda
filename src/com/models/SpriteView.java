@@ -106,6 +106,8 @@ public class SpriteView extends StackPane {
         return following;
     }
 
+    public SpriteView getFollower() {return follower;}
+
     public Location getLocation() {
         return location.get();
     }
