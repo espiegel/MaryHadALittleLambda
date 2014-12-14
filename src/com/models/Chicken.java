@@ -29,7 +29,7 @@ public class Chicken extends NumberedSpriteView {
         }
     };
     public Chicken(SpriteView following) {
-        super(CHICKEN, following);
+        super(CHICKEN, following, -2);
         colorOffset = 1;
         direction.addListener(directionListener);
         directionListener.changed(direction, direction.getValue(), direction.getValue());

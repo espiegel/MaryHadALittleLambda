@@ -24,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class SpriteView extends StackPane {
+    private int TYPE = -1;
     protected final ImageView imageView;
     protected Color color;
     protected EventHandler<ActionEvent> arrivalHandler;
@@ -37,19 +38,55 @@ public class SpriteView extends StackPane {
     protected SpriteView follower;
     protected SpriteView following;
     protected IntegerProperty number = new SimpleIntegerProperty();
-
-    public SpriteView(Image spriteSheet, SpriteView following) {
-        this(spriteSheet, following.getLocation().offset(-following.getDirection().getXOffset(), -following.getDirection().getYOffset()));
-        number.set(following.number.get() + 1);
-        this.following = following;
-        setDirection(following.getDirection());
-        following.follower = this;
-        setMouseTransparent(true);
+    public int getType() {
+        return TYPE;
+    }
+    private float WIDTH, HEIGHT, padX, padY;
+    public void updateNumber() {
+        number.setValue(number.get() + 1);
+    }
+    public void setFollower(SpriteView b)  {
+        follower = b;
+    }
+    public void remove() {
+        //following.follower = follower;
+        //follower.following = following;
+    }
+    public void updateSize() {
+        float tmpx, tmpy;
+        tmpx = WIDTH;
+        tmpy = HEIGHT;
+        WIDTH = WIDTH * 1.05f;
+        HEIGHT = HEIGHT * 1.05f;
+        padX += (tmpx - WIDTH) / 2;
+        padY += (tmpx - HEIGHT) / 2;
+    }
+    public SpriteView(Image spriteSheet, SpriteView following, int TYPE) {
+        this(spriteSheet, following == null ? new Location(Main.HORIZONTAL_CELLS - 1, Main.VERTICAL_CELLS - 1) : following.getLocation().offset(-following.getDirection().getXOffset(), -following.getDirection().getYOffset()), TYPE);
+        this.TYPE = TYPE;
+        if (following != null) {
+            number.set(following.number.get() + 1);
+            this.following = following;
+            setDirection(following.getDirection());
+            following.follower = this;
+            setMouseTransparent(true);
+        } else {
+            number.set(0);
+            setDirection(Direction.DOWN);
+            setMouseTransparent(true);
+        }
     }
 
-    public SpriteView(Image spriteSheet, Location loc) {
+    public SpriteView(Image spriteSheet, Location loc, int TYPE) {
+        WIDTH = Main.CELL_SIZE;
+        HEIGHT = Main.CELL_SIZE;
+        this.TYPE = TYPE;
         imageView = new ImageView(spriteSheet);
         this.location.set(loc);
+        if (TYPE == 7) {
+            Main.map_sheep[loc.getX() + Main.HORIZONTAL_CELLS][loc.getY() + Main.VERTICAL_CELLS] = true;
+            Main.map_sheep_sprite_view[loc.getX() + Main.HORIZONTAL_CELLS][loc.getY() + Main.VERTICAL_CELLS] = this;
+        }
         setTranslateX(loc.getX() * Main.CELL_SIZE);
         setTranslateY(loc.getY() * Main.CELL_SIZE);
         ChangeListener<Object> updateImage = (ov, o, o2) -> imageView.setViewport(new Rectangle2D(frame.get() * spriteWidth, direction.get().getOffset() * spriteHeight, spriteWidth, spriteHeight));
@@ -76,6 +113,10 @@ public class SpriteView extends StackPane {
     }
 
     public void moveTo(Location loc) {
+        if (TYPE == 7) {
+            Main.map_sheep[loc.getX() + Main.HORIZONTAL_CELLS][loc.getY() + Main.VERTICAL_CELLS] = false;
+            Main.map_sheep_sprite_view[loc.getX() + Main.HORIZONTAL_CELLS][loc.getY() + Main.VERTICAL_CELLS] = null;
+        }
         walking = new Timeline(Animation.INDEFINITE,
             new KeyFrame(Duration.seconds(.01), new KeyValue(direction, location.getValue().directionTo(loc))),
             new KeyFrame(Duration.seconds(1), new KeyValue(translateXProperty(), loc.getX() * Main.CELL_SIZE)),
@@ -91,6 +132,10 @@ public class SpriteView extends StackPane {
                 arrivalHandler.handle(e);
             }
         });
+        if (TYPE == 7) {
+            Main.map_sheep[loc.getX() + Main.HORIZONTAL_CELLS][loc.getY() + Main.VERTICAL_CELLS] = true;
+            Main.map_sheep_sprite_view[loc.getX() + Main.HORIZONTAL_CELLS][loc.getY() + Main.VERTICAL_CELLS] = this;
+        }
         Application.invokeLater(walking::play);
     }
 
@@ -104,6 +149,9 @@ public class SpriteView extends StackPane {
 
     public SpriteView getFollowing() {
         return following;
+    }
+    public SpriteView getFollower() {
+        return follower;
     }
 
     public Location getLocation() {

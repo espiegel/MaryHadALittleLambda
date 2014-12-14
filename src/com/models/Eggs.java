@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 public class Eggs extends NumberedSpriteView {
     static final Image EGGS = loadImage("images/eggs.png");
     public Eggs(SpriteView following) {
-        super(EGGS, following);
+        super(EGGS, following, -1);
     }
     public static Stream<SpriteView> hatch(SpriteView sv) {
         if (!(sv instanceof Eggs)) {

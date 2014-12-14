@@ -7,7 +7,7 @@ import com.Main;
 public abstract class MapObject extends SpriteView {
 
     public MapObject(Image spriteSheet, Location loc) {
-        super(spriteSheet, loc);
+        super(spriteSheet, loc, -1);
         Main.map[loc.getX()][loc.getY()] = this;
     }
 

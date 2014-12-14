@@ -13,13 +13,11 @@ import javafx.scene.image.Image;
 
 public class Shepherd extends SpriteView {
     private ObservableList<SpriteView> animals;
-
     public ObservableList<SpriteView> getAnimals() {
         return animals;
     }
-
-    public Shepherd(Image spriteSheet, Location loc) {
-        super(spriteSheet, loc);
+    public Shepherd(Image spriteSheet, Location loc, int TYPE) {
+        super(spriteSheet, loc, TYPE);
         animals = FXCollections.observableArrayList();
         animals.addListener((ListChangeListener<Node>) c -> {
             ObservableList<Node> children = ((Group) getParent()).getChildren();
