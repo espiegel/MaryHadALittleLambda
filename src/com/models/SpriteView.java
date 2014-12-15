@@ -13,6 +13,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -24,7 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class SpriteView extends StackPane {
-    protected final ImageView imageView;
+    protected ImageView imageView;
     protected Color color;
     protected EventHandler<ActionEvent> arrivalHandler;
     protected double colorOffset;
@@ -52,7 +53,7 @@ public class SpriteView extends StackPane {
         this.location.set(loc);
         setTranslateX(loc.getX() * Main.CELL_SIZE);
         setTranslateY(loc.getY() * Main.CELL_SIZE);
-        ChangeListener<Object> updateImage = (ov, o, o2) -> imageView.setViewport(new Rectangle2D(frame.get() * spriteWidth, direction.get().getOffset() * spriteHeight, spriteWidth, spriteHeight));
+        ChangeListener<Object> updateImage =  (ov, o, o2) -> imageView.setViewport(new Rectangle2D(frame.get() * spriteWidth, direction.get().getOffset() * spriteHeight, spriteWidth, spriteHeight));
         direction.addListener(updateImage);
         frame.addListener(updateImage);
         spriteWidth = (int) (spriteSheet.getWidth() / 3);
@@ -62,6 +63,9 @@ public class SpriteView extends StackPane {
     }
     public static Image loadImage(String url) {
         return new Image(SpriteView.class.getResource(url).toString(), Main.SPRITE_SIZE * 3 * Main.SCALE, Main.SPRITE_SIZE * 4 * Main.SCALE, true, false);
+    }
+    public static Image loadImage(String url, double size) {
+        return new Image(SpriteView.class.getResource(url).toString(), Main.SPRITE_SIZE * 3 * size * Main.SCALE, Main.SPRITE_SIZE * 4 * size * Main.SCALE, true, false);
     }
 
     public void startAnimation() {

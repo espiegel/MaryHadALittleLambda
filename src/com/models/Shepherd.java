@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 public class Shepherd extends SpriteView {
     private ObservableList<SpriteView> animals;
 
+
     public ObservableList<SpriteView> getAnimals() {
         return animals;
     }
@@ -46,14 +47,21 @@ public class Shepherd extends SpriteView {
         };
     }
 
-    public void move(Direction direction) {
+    public boolean move(Direction direction) {
         if(walking != null && walking.getStatus().equals(Animation.Status.RUNNING))
-            return;
+            return false;
+        //Yariv
+        else if(   (location.getValue().getX() == 0 && direction.getXOffset() < 0)
+                || (location.getValue().getX() == 9 && direction.getXOffset() > 0)
+                || (location.getValue().getY() == 5 && direction.getYOffset() > 0)
+                || (location.getValue().getY() == 0 && direction.getYOffset() < 0))
+            return false;
         moveTo(location.getValue().offset(direction.getXOffset(), direction.getYOffset()));
         animals.stream().reduce(
                 location.get(), (loc, sprt) -> {
                     sprt.moveTo(loc);
                     return sprt.location.get();
                 }, (loc1, loc2) -> loc1);
+        return true;
     }
 }

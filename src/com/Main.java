@@ -23,6 +23,8 @@ public class Main extends Application {
     public static final int BOARD_WIDTH = HORIZONTAL_CELLS * CELL_SIZE;
     public static final int BOARD_HEIGHT = VERTICAL_CELLS * CELL_SIZE;
     public static MapObject[][] map = new MapObject[HORIZONTAL_CELLS][VERTICAL_CELLS];
+    public static int shep_walk = 0;
+    public static boolean step = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -51,9 +53,14 @@ public class Main extends Application {
         root.getChildren().add(fox);*/
 
         Mary mary = new Mary(new Location(0, 3));
+        John john = new John(new Location(9, 0));
+        Lion lion = new Lion(new Location(9, 5));
+
         populateCells(root);
         root.getChildren().add(mary);
-        addKeyHandler(scene, mary);
+        root.getChildren().add(john);
+        root.getChildren().add(lion);
+        addKeyHandler(scene, mary , john , lion);
 
         primaryStage.show();
     }
@@ -83,29 +90,54 @@ public class Main extends Application {
         root.getChildren().add(cells);
     }
 
-    private void addKeyHandler(Scene scene, Shepherd mary) {
+    private void addKeyHandler(Scene scene, Shepherd mary, Shepherd john, Lion lion) {
         scene.addEventHandler(KeyEvent.KEY_PRESSED, ke -> {
             KeyCode keyCode = ke.getCode();
             switch (keyCode) {
+                case Q:
+                    if(john.move(Direction.UP_LEFT)) { step = true ; shep_walk++;}
+                    break;
                 case W:
+                    if(john.move(Direction.UP)) { step = true ; shep_walk++;}
+                    break;
                 case UP:
-                    mary.move(Direction.UP);
+                    if(mary.move(Direction.UP)) { step = true ; shep_walk++;}
+                    break;
+                case E:
+                    if(john.move(Direction.UP_RIGHT)) { step = true ; shep_walk++;}
                     break;
                 case A:
+                    if(john.move(Direction.LEFT)) { step = true ; shep_walk++;}
+                    break;
                 case LEFT:
-                    mary.move(Direction.LEFT);
+                    if(mary.move(Direction.LEFT)) { step = true ; shep_walk++;}
+                    break;
+                case C:
+                    if(john.move(Direction.DOWN_RIGHT)) { step = true ; shep_walk++;}
                     break;
                 case S:
+                    if(john.move(Direction.DOWN)) { step = true ; shep_walk++;}
+                    break;
                 case DOWN:
-                    mary.move(Direction.DOWN);
+                    if(mary.move(Direction.DOWN)) { step = true ; shep_walk++;}
+                    break;
+                case Z:
+                    if(john.move(Direction.DOWN_LEFT)) { step = true ; shep_walk++;}
                     break;
                 case D:
+                    if(john.move(Direction.RIGHT)) { step = true ; shep_walk++;}
+                    break;
                 case RIGHT:
-                    mary.move(Direction.RIGHT);
+                    if(mary.move(Direction.RIGHT)) { step = true ; shep_walk++;}
                     break;
                 case ESCAPE:
                     Platform.exit();
             }
+            if (step){
+                lion.chase(mary.getAnimals(),john.getAnimals(),shep_walk);
+                step = false;
+            }
+
         });
     }
 

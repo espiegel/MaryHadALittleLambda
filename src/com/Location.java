@@ -24,6 +24,12 @@ public class Location {
             return (loc.cell_y > cell_y) ? Direction.DOWN : Direction.UP;
         }
     }
+    //Yariv
+    public int distance(Location loc)
+    {
+        return (Math.abs(loc.cell_x - cell_x) + Math.abs(loc.cell_y - cell_y));
+    }
+
     @Override
     public String toString() {
         return "Location{" +
